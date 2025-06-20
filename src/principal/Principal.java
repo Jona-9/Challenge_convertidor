@@ -11,19 +11,10 @@ import java.io.IOException;
 
 public class Principal {
     public static void main(String[] args) throws IOException, InterruptedException {
-        // Conversor conversor = new Conversor();
-
-
-    /*    Gson gson =  new GsonBuilder().setFieldNamingPolicy(FieldNamingPolicy.UPPER_CAMEL_CASE).create();
-        TransformandoDatos Transformar = gson.fromJson(json,TransformandoDatos.class);
-        Conversor conversor = new Conversor(tran)
-
-        String dolar = "USD";
-    //    Conversor conversor = new Conversor();
-      //  conversor.convercion();
-        //conversor.moneda="s";
-    }
-
-     */
+        Gson gson =  new GsonBuilder().setFieldNamingPolicy(FieldNamingPolicy.UPPER_CAMEL_CASE).create();
+        Conversor conversor = new Conversor();
+        TransformandoDatos Transformar = gson.fromJson(conversor.convercion("usd"),TransformandoDatos.class);
+        RealizarOperaciones realizarOperaciones = new RealizarOperaciones(Transformar);
+        realizarOperaciones.mensaje();
     }
 }
