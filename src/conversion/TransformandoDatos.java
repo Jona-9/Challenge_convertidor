@@ -1,4 +1,4 @@
 package conversion;
 
-public record TransformandoDatos(String usd, String ars, String brl) {
+public record TransformandoDatos(String USD, String ARS, String BRL,String PEN, String COP) {
 }
