@@ -22,14 +22,3 @@ Este proyecto es una aplicación de consola en Java que permite convertir montos
 ✅ Valida que el usuario ingrese una opción correcta  
 ✅ Permite salir del programa en cualquier momento  
 
-## 📦 Estructura del proyecto
-src/
-│
-├── conversion/
-│ ├── ApiResponse.java # Mapea la respuesta JSON de la API
-│ ├── Conversor.java # Encargado de consumir la API
-│ ├── RealizarOperaciones.java # Lógica de conversión
-│ └── TransformandoDatos.java # Record con tasas de cambio
-│
-└── principal/
-└── Principal.java # Clase con el menú y control del programa
