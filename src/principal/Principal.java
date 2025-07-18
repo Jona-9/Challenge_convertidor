@@ -1,15 +1,13 @@
 package principal;
 
-import com.google.gson.FieldNamingPolicy;
+import Lista.RegistroConversiones;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import conversion.ApiResponse;
-import conversion.Conversor;
-import conversion.RealizarOperaciones;
-import conversion.TransformandoDatos;
+import conversion.*;
 
 import java.io.IOException;
-import java.util.*;
+import java.util.InputMismatchException;
+import java.util.Scanner;
 
 public class Principal {
     public static void main(String[] args) throws IOException, InterruptedException {
@@ -20,6 +18,8 @@ public class Principal {
         ApiResponse respuesta = gson.fromJson(json, ApiResponse.class);
         TransformandoDatos datos = respuesta.conversion_rates();
         RealizarOperaciones realizar = new RealizarOperaciones(datos);
+        RegistroConversiones registro = new RegistroConversiones();
+
         String mensaje = """
                 *----Bienvenido al conversor de monedas----*
                 1) Dólar --> Sol Peruano
@@ -33,44 +33,73 @@ public class Principal {
                 9) Salir
                 ----* Elija una opción válida *----
                 """;
+
         int numero = 0;
         double cantidad = 0.0;
-        do {
-            do {
-                System.out.print(mensaje);
-                numero = lec.nextInt();
-                if (numero < 0 || numero > 9) {
-                    System.out.println("Error ingrese el número dentro del rango correcto");
-                }
-            } while (numero < 0 || numero > 9);
-            if (numero == 9) {
-                break;
-            }
-            System.out.println("Ingrese la cantidad que va a convertir");
-            cantidad = lec.nextDouble();
-            String mostrar = switch (numero) {
-                case 1 ->
-                        String.format("Su cantidad ingresada en $%.2f es %.2f Soles ", cantidad, realizar.conversion(numero, cantidad));
-                case 2 ->
-                        String.format("Su cantidad ingresada en S/%.2f es %.2f Dólares ", cantidad, realizar.conversion(numero, cantidad));
-                case 3 ->
-                        String.format("Su cantidad ingresada en $%.2f es %.2f Pesos Argentinos ", cantidad, realizar.conversion(numero, cantidad));
-                case 4 ->
-                        String.format("Su cantidad ingresada en ARS %.2f es %.2f Dólares ", cantidad, realizar.conversion(numero, cantidad));
-                case 5 ->
-                        String.format("Su cantidad ingresada en  $%.2f es %.2f Real brasileño ", cantidad, realizar.conversion(numero, cantidad));
-                case 6 ->
-                        String.format("Su cantidad ingresada en  BRL %.2f es %.2f Dólares ", cantidad, realizar.conversion(numero, cantidad));
-                case 7 ->
-                        String.format("Su cantidad ingresada en   $%.2f es %.2f Peso Colombiano ", cantidad, realizar.conversion(numero, cantidad));
-                case 8 ->
-                        String.format("Su cantidad ingresada en   Col %.2f es %.2f Dólares ", cantidad, realizar.conversion(numero, cantidad));
-                case 9 -> String.format("Saliendo del programa");
-                default -> String.format("--Finalizando el programa--");
 
-            };
-            System.out.println(mostrar);
+        do {
+            try {
+                do {
+                    System.out.print(mensaje);
+                    numero = lec.nextInt();
+                    if (numero < 0 || numero > 9) {
+                        System.out.println(" Error: ingrese un número dentro del rango correcto");
+                    }
+                } while (numero < 0 || numero > 9);
+
+                if (numero == 9) break;
+
+                System.out.print("Ingrese la cantidad que va a convertir: ");
+                cantidad = lec.nextDouble();
+
+                double resultado = realizar.conversion(numero, cantidad);
+                String mostrar = "";
+
+                switch (numero) {
+                    case 1 -> {
+                        registro.registrar("Dólar a Sol Peruano", cantidad);
+                        mostrar = String.format("Su cantidad ingresada en $%.2f es %.2f Soles", cantidad, resultado);
+                    }
+                    case 2 -> {
+                        registro.registrar("Sol Peruano a Dólar", cantidad);
+                        mostrar = String.format("Su cantidad ingresada en S/%.2f es %.2f Dólares", cantidad, resultado);
+                    }
+                    case 3 -> {
+                        registro.registrar("Dólar a Peso Argentino", cantidad);
+                        mostrar = String.format("Su cantidad ingresada en $%.2f es %.2f Pesos Argentinos", cantidad, resultado);
+                    }
+                    case 4 -> {
+                        registro.registrar("Peso Argentino a Dólar", cantidad);
+                        mostrar = String.format("Su cantidad ingresada en ARS %.2f es %.2f Dólares", cantidad, resultado);
+                    }
+                    case 5 -> {
+                        registro.registrar("Dólar a Real Brasileño", cantidad);
+                        mostrar = String.format("Su cantidad ingresada en $%.2f es %.2f Reales", cantidad, resultado);
+                    }
+                    case 6 -> {
+                        registro.registrar("Real Brasileño a Dólar", cantidad);
+                        mostrar = String.format("Su cantidad ingresada en BRL %.2f es %.2f Dólares", cantidad, resultado);
+                    }
+                    case 7 -> {
+                        registro.registrar("Dólar a Peso Colombiano", cantidad);
+                        mostrar = String.format("Su cantidad ingresada en $%.2f es %.2f Pesos Colombianos", cantidad, resultado);
+                    }
+                    case 8 -> {
+                        registro.registrar("Peso Colombiano a Dólar", cantidad);
+                        mostrar = String.format("Su cantidad ingresada en COL %.2f es %.2f Dólares", cantidad, resultado);
+                    }
+                }
+
+                System.out.println(mostrar);
+
+            } catch (InputMismatchException e) {
+                System.out.println(" Error: Ingresaste un valor no numérico. Inténtalo de nuevo.");
+                lec.nextLine(); // Limpia el buffer del Scanner
+            }
+
         } while (numero != 9);
+
+        registro.mostrarResumen();
         System.out.println("--Saliendo del programa--");
     }
 }
